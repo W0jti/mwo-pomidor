@@ -52,9 +52,25 @@ public class ExcelReader implements IExcelReader{
             Row currentRow = rowIterator.next();
             Iterator<Cell> cellIterator = currentRow.cellIterator();
 
+            //handle blank cells - for now it skips whole row
+            List<CellType> cellTypes = new ArrayList<>();
+            for (int i=0 ; i<3 ;i++){
+                Cell cell = currentRow.getCell(i);
+                if (cell == null){
+                    cellTypes.add(CellType.BLANK);
+                    continue;
+                }
+                cellTypes.add(cell.getCellType());
+            }
+
+            if (cellTypes.contains(CellType.BLANK)){
+                continue;
+            }
+
             Date date = currentRow.getCell(0).getDateCellValue();
             String name = currentRow.getCell(1).getStringCellValue();
             BigDecimal hours = BigDecimal.valueOf(currentRow.getCell(2).getNumericCellValue());
+
 
             Task task = new Task(employee, name, date, hours, projectName);
             tasks.add(task);
