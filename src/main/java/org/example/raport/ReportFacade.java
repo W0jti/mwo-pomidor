@@ -19,7 +19,8 @@ public class ReportFacade {
     }
 
     public  void report2(){
-
+        Report2Generator report2Generator = new Report2Generator();
+        report2Generator.printReport(tasks);
     }
 
     public  void report3(){

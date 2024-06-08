@@ -78,7 +78,7 @@ public class Main {
         List<Task> tasks = excelReader.readTasksFromMultipleFiles(filePaths);
 
         ReportFacade reportGenerator = new ReportFacade(tasks);
-        reportGenerator.report1();
+        reportGenerator.report2();
 
     }
 
