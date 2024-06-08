@@ -75,7 +75,8 @@ public class Main {
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
         RaportFacade reportGenerator = new RaportFacade();
 
-        String folderPath = "/var/home/student/Desktop/dane/2012";
+        String folderPath ="C:\\Users\\admin\\Desktop\\mwo-pomidor\\src\\resources\\reporter-dane\\reporter-dane\\2012";
+
 
         List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
 

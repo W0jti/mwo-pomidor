@@ -1,5 +1,6 @@
 package org.example.raport;
 
+import org.example.Report2Generator;
 import org.example.model.Task;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public class RaportFacade {
     }
 
     public  void raport2(List<Task> tasks){
+        Report2Generator report2Generator = new Report2Generator();
+        report2Generator.printRaport(tasks);
 
     }
 
