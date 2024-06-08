@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.Data.ExcelReaderFacade;
+import org.example.Data.FileSearcher;
 import org.example.model.Task;
 
 import java.io.IOException;
@@ -17,5 +18,17 @@ public class Main {
 
         Report1Generator report1Generator = new Report1Generator();
         report1Generator.countHoursPerProject(employeeTasks, new String[]{"Projekt1", "Projekt2", "Projekt3"});
+        String folderPath = "/var/home/student/Desktop/dane/2012";
+
+        FileSearcher fileSearcher = new FileSearcher();
+        List<String> filePaths = fileSearcher.searchXlsFile(folderPath);
+        for (String filepath: filePaths) {
+            System.out.println("Reading file: " + filepath);
+            List<Task> employeeTasks = excelReader.readEmployeeTasks(filepath);
+            for (Task task: employeeTasks) {
+                System.out.println(task);
+            }
+            System.out.println("\n\n");
+        }
     }
 }

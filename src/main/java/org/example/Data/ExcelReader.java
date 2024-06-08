@@ -2,6 +2,7 @@ package org.example.Data;
 
 import org.apache.poi.ss.usermodel.*;
 import org.example.model.Task;
+import org.example.utils.StringExtensions;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +28,9 @@ public class ExcelReader implements IExcelReader{
         List<String> projectNames = new ArrayList<String>();
         File file = new File(filepath);
         String employee = file.getName();
+
         Workbook workbook = WorkbookFactory.create(file);
+
         int sheetCount = workbook.getNumberOfSheets();
         for (int i=0 ; i<sheetCount ; i++){
             projectNames.add(workbook.getSheetName(i));
@@ -39,7 +42,7 @@ public class ExcelReader implements IExcelReader{
         List<Task> tasks = new ArrayList<Task>();
 
         File file = new File(filepath);
-        String employee = file.getName();
+        String employee = StringExtensions.getEmployeeNameFromFilepath(file.getName());
         Workbook workbook = WorkbookFactory.create(file);
         Sheet sheet = workbook.getSheet(projectName);
 
@@ -49,15 +52,31 @@ public class ExcelReader implements IExcelReader{
             Row currentRow = rowIterator.next();
             Iterator<Cell> cellIterator = currentRow.cellIterator();
 
+            //handle blank cells - for now it skips whole row
+            List<CellType> cellTypes = new ArrayList<>();
+            for (int i=0 ; i<3 ;i++){
+                Cell cell = currentRow.getCell(i);
+                if (cell == null){
+                    cellTypes.add(CellType.BLANK);
+                    continue;
+                }
+                cellTypes.add(cell.getCellType());
+            }
+
+            if (cellTypes.contains(CellType.BLANK)){
+                continue;
+            }
+
             Date date = currentRow.getCell(0).getDateCellValue();
             String name = currentRow.getCell(1).getStringCellValue();
-            BigDecimal hours = new BigDecimal(currentRow.getCell(2).getNumericCellValue());
+            BigDecimal hours = BigDecimal.valueOf(currentRow.getCell(2).getNumericCellValue());
+
 
             Task task = new Task(employee, name, date, hours, projectName);
             tasks.add(task);
             cellIterator.next();
         }
-        System.out.println("");
+
         return tasks;
     }
 
