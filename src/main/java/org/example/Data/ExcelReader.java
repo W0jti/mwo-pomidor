@@ -11,18 +11,37 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class ExcelReader {
-    public List<Task> readFile() throws IOException {
-        String filePath = "/var/home/student/Desktop/dane/2012/01/Kowalski_Jan.xls";
+public class ExcelReader implements IExcelReader{
+
+    public String filepath;
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public ExcelReader(String filepath) {
+        this.filepath = filepath;
+    }
+
+
+    public List<String> readProjectNames() throws IOException {
+        List<String> projectNames = new ArrayList<String>();
+        File file = new File(filepath);
+        String employee = file.getName();
+        Workbook workbook = WorkbookFactory.create(file);
+        int sheetCount = workbook.getNumberOfSheets();
+        for (int i=0 ; i<sheetCount ; i++){
+            projectNames.add(workbook.getSheetName(i));
+        }
+        return projectNames;
+    }
+
+    public List<Task> readProjectTasks(String projectName) throws IOException {
         List<Task> tasks = new ArrayList<Task>();
 
-        File file = new File(filePath);
+        File file = new File(filepath);
         String employee = file.getName();
-
         Workbook workbook = WorkbookFactory.create(file);
-
-        Sheet sheet = workbook.getSheetAt(0);
-        String projectName = sheet.getSheetName();
+        Sheet sheet = workbook.getSheet(projectName);
 
         Iterator<Row> rowIterator = sheet.iterator();
         rowIterator.next();
