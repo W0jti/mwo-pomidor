@@ -1,4 +1,4 @@
-<center> ## Reports generator </center>
+## Reports generator
 
 This program can be used to generate reports based on Excel files prepared. Input files have to contain **`date`/`task`/`time(h)`** columns. 
 
