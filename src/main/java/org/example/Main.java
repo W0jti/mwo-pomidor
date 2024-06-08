@@ -11,75 +11,73 @@ import java.util.List;
 
 public class Main {
 
+    private final static Option ARG_PATH = Option.builder("p")
+            .argName("path")
+            .longOpt("path")
+            .hasArg()
+            .desc("Folder/file path")
+            .build();
+
+    private final static Option ARG_REPORT_TYPE = Option.builder("r")
+            .argName("reportType")
+            .longOpt("report-type")
+            .desc("Report type: 1/2/3")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_HELP = Option.builder("h")
+            .argName("help")
+            .longOpt("usage")
+            .desc("How to use")
+            .build();
+
     public static void main(String[] args) throws IOException, ParseException {
-        CommandLineParser parser = new DefaultParser();
+
         Options options = new Options();
+        options.addOption(ARG_PATH);
+        options.addOption(ARG_REPORT_TYPE);
+        options.addOption(ARG_HELP);
+
+        CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        options.addOption("source", true, "Source of the files");//-source resources
-        options.addOption("reptype", true, "Type of the report");//-reptype 1
-        options.addOption("datefilter", true, "Filter by dates");//-datefilter 2024/04/10-2024/05/20
-        options.addOption("employeefilter", true, "Filter by employee");//-employeefilter Kowalski_Jan
-        options.addOption("taskfilter", true, "Filter bys task");//-taskfilter spotkanie
-        options.addOption("help", false, "Help");//-help
-
-        String source = cmd.getOptionValue("source");
-        String repType = cmd.getOptionValue("reptype");
-        String dateFilter = cmd.getOptionValue("datefilter");
-        String employeeFilter = cmd.getOptionValue("employeefilter");
-        String taskFilter = cmd.getOptionValue("taskfilter");
-        String help = cmd.getOptionValue("help");
-
-        if (cmd.hasOption("source")) {
-            //pull data from that source
-            System.out.println("Report is using source files");
-        } else {
-            //throw an error
+        if (cmd.hasOption("h")){
+            usage(options);
         }
 
-        if (cmd.hasOption("repType")) {
-            //select particular report
-            System.out.println("Report has selected type");
-        } else {
-            //throw an error
+        if (cmd.hasOption("r") && cmd.hasOption("p")) {
+            generateReport(cmd.getOptionValue("p"), cmd.getOptionValue("r"));
         }
-
-        if (cmd.hasOption("datafilter")){
-            //show data for selected dates
-            System.out.println("Report is datefiltered");
-        } else {
-            //throw an error
-        }
-
-        if (cmd.hasOption("employeefilter")){
-            //show data for selected employee
-            System.out.println("Report is employee filtered");
-        } else {
-            //throw an error
-        }
-
-        if (cmd.hasOption("taskfilter")){
-            //show data for that task
-            System.out.println("Report is taskfiltered");
-        } else {
-            //throw an error
-        }
-
-        if (cmd.hasOption("help")){
-            //show helper
-            System.out.println("Showing help");
-        }
+    }
 
 
-        String folderPath = "src/resources/reporter-dane/reporter-dane/2012/01/Kowalski_Jan.xls";
+    public static void usage(Options options) {
+        String header = "Report generator\n";
+        String footer = "\nPlease report issues at https://github.com/W0jti/mwo-pomidor";
 
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("ReportGenerator", header, options, footer, true);
+    }
+
+
+    public static void generateReport(String folderPath, String reportNumber) throws IOException {
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
         List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
         List<Task> tasks = excelReader.readTasksFromMultipleFiles(filePaths);
-
         ReportFacade reportGenerator = new ReportFacade(tasks);
-        reportGenerator.report2();
 
+        switch (reportNumber){
+            case "1":
+                reportGenerator.report1();
+                break;
+
+            case "2":
+                reportGenerator.report2();
+                break;
+
+            case "3":
+                reportGenerator.report3();
+                break;
+        }
     }
-
 }
