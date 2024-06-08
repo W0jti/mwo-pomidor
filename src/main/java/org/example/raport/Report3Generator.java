@@ -4,53 +4,65 @@ import org.example.model.Task;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.Map.Entry;
-
 
 public class Report3Generator {
-    public HashMap<String, BigDecimal> getRaportData(List<Task> tasks) {
-        HashMap<String, BigDecimal> projectDataMap = new HashMap<String, BigDecimal>();
 
-        for (Task task: tasks) {
+    public HashMap<String, HashMap<String, BigDecimal>> getRaportData(List<Task> tasks) {
+        HashMap<String, HashMap<String, BigDecimal>> projectDataMap = new HashMap<>();
+
+        for (Task task : tasks) {
+            String projectName = task.getProjectName();
             String taskName = task.getName();
             BigDecimal hours = task.getHours();
 
-            if (projectDataMap.containsKey(taskName)) {
-                hours = projectDataMap.get(taskName).add(hours);
-                projectDataMap.put(taskName, hours);
-            } else {
-                projectDataMap.put(taskName, hours);
-            }
+            projectDataMap.putIfAbsent(projectName, new HashMap<>());
+            HashMap<String, BigDecimal> taskDataMap = projectDataMap.get(projectName);
+
+            taskDataMap.put(taskName, taskDataMap.getOrDefault(taskName, BigDecimal.ZERO).add(hours));
         }
 
         return projectDataMap;
     }
 
-
     private Map<String, BigDecimal> sortByValues(Map<String, BigDecimal> map) {
-        List sortedByValueList = new LinkedList(map.entrySet());
+        List<Map.Entry<String, BigDecimal>> sortedByValueList = new LinkedList<>(map.entrySet());
         Collections.sort(sortedByValueList,
-                new Comparator<Map.Entry<String, BigDecimal>>() {
-                    public int compare(Entry<String, BigDecimal> o1,
-                                       Entry<String, BigDecimal> o2) {
-                        return ((Comparable) (o2).getValue())
-                                .compareTo((o1).getValue());
-                    }
-                });
-        Map<String, BigDecimal> sortedHashMap = new LinkedHashMap<String, BigDecimal>();
-        for (Iterator it = sortedByValueList.iterator(); it.hasNext();) {
-            Map.Entry<String, BigDecimal> entry = (Map.Entry) it.next();
+                Comparator.comparing(Map.Entry<String, BigDecimal>::getValue).reversed());
+
+        Map<String, BigDecimal> sortedHashMap = new LinkedHashMap<>();
+        for (Map.Entry<String, BigDecimal> entry : sortedByValueList) {
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
         return sortedHashMap;
     }
 
     public void printReport(List<Task> tasks) {
-        HashMap<String, BigDecimal>  projectData = getRaportData(tasks);
-        Map<String, BigDecimal> projectDataSorted = sortByValues(projectData);
+        HashMap<String, HashMap<String, BigDecimal>> projectData = getRaportData(tasks);
 
-        for (Map.Entry<String, BigDecimal> set : projectDataSorted.entrySet()) {
-            System.out.println(set.getKey() + " - " + set.getValue() + "h");
+        // Sum up total hours per project
+        HashMap<String, BigDecimal> totalHoursPerProject = new HashMap<>();
+        for (Map.Entry<String, HashMap<String, BigDecimal>> entry : projectData.entrySet()) {
+            String projectName = entry.getKey();
+            BigDecimal totalHours = entry.getValue().values().stream()
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            totalHoursPerProject.put(projectName, totalHours);
+        }
+
+        // Sort projects by total hours
+        Map<String, BigDecimal> sortedProjects = sortByValues(totalHoursPerProject);
+
+        // Print sorted projects with their tasks
+        for (Map.Entry<String, BigDecimal> projectEntry : sortedProjects.entrySet()) {
+            String projectName = projectEntry.getKey();
+            BigDecimal totalHours = projectEntry.getValue();
+            System.out.println(projectName + " - " + totalHours + "h");
+
+            HashMap<String, BigDecimal> tasksInProject = projectData.get(projectName);
+            Map<String, BigDecimal> sortedTasks = sortByValues(tasksInProject);
+
+            for (Map.Entry<String, BigDecimal> taskEntry : sortedTasks.entrySet()) {
+                System.out.println("  " + taskEntry.getKey() + " - " + taskEntry.getValue() + "h");
+            }
         }
     }
 }
