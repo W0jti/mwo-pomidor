@@ -1,18 +1,28 @@
 package org.example.Data;
 
 import org.apache.poi.ss.usermodel.*;
+import org.example.model.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 public class ExcelReader {
-    public void readFile() throws IOException {
+    public List<Task> readFile() throws IOException {
         String filePath = "/var/home/student/Desktop/dane/2012/01/Kowalski_Jan.xls";
+        List<Task> tasks = new ArrayList<Task>();
 
-        Workbook workbook = WorkbookFactory.create(new File(filePath));
+        File file = new File(filePath);
+        String employee = file.getName();
+
+        Workbook workbook = WorkbookFactory.create(file);
 
         Sheet sheet = workbook.getSheetAt(0);
+        String projectName = sheet.getSheetName();
 
         Iterator<Row> rowIterator = sheet.iterator();
         rowIterator.next();
@@ -20,22 +30,16 @@ public class ExcelReader {
             Row currentRow = rowIterator.next();
             Iterator<Cell> cellIterator = currentRow.cellIterator();
 
-            var data = currentRow.getCell(0).getDateCellValue();
-            var task = currentRow.getCell(1).getStringCellValue();
-            var hours = currentRow.getCell(2).getNumericCellValue();
+            Date date = currentRow.getCell(0).getDateCellValue();
+            String name = currentRow.getCell(1).getStringCellValue();
+            BigDecimal hours = new BigDecimal(currentRow.getCell(2).getNumericCellValue());
 
-            System.out.println(data + " " + task + " " + hours);
+            Task task = new Task(employee, name, date, hours, projectName);
+            tasks.add(task);
             cellIterator.next();
-//            while (cellIterator.hasNext()) {
-//                Cell cell = cellIterator.next();
-//
-//
-////                System.out.println(date + " = " + task + " == " + hours);
-//                System.out.println(cell.getStringCellValue());
-//                System.out.println("dasda");
-//            }
         }
         System.out.println("");
+        return tasks;
     }
 
 }
