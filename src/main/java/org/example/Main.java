@@ -11,12 +11,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         String filePath = "src/resources/reporter-dane/reporter-dane/2012/01/Kowalski_Jan.xls";
+
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
-//
-//        List<Task> employeeTasks = excelReader.readEmployeeTasks(filePath);
-//        for (Task task: employeeTasks) {
-//            System.out.println(task);
-//        }
 
         String folderPath = "/var/home/student/Desktop/dane/2012";
 
