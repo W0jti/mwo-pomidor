@@ -1,6 +1,8 @@
 ## Reports generator
 
-This program can be used to generate reports based on Excel files prepared. Input files have to contain **`date`/`task`/`time(h)`** columns. User can creates three reports types:
+This program can be used to generate reports based on Excel files prepared. Input files have to contain **`date`/`task`/`time(h)`** columns. 
+
+Users can create three report types:
 
 - **Report 1** - contains time for given projects
 
