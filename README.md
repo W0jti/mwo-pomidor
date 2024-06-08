@@ -35,20 +35,21 @@ Users can create three report types:
 
    `Project 1 - 130h`
    ```
-         Task 1 - 100 h
-         Task 2 - 30 h
+           Task 1 - 100 h
+           Task 2 - 30 h
    ```
 
    `Project 2 - 90h`
    ```
-         Task 1 - 60 h
-         Task 2 - 30 h
+           Task 1 - 60 h
+           Task 2 - 30 h
    ```
 
 ### Usage
 By default report is generated in console, but there is option to generate output Excel file with the bar charts.
 
 To generate a report, run the following command:
-*#TODO*
+
+   `*#TODO*`
 
 `Made with ♡ by 🍅`
