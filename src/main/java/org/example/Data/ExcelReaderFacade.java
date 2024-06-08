@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelReaderFacade {
-    public List<Task> readEmployeeTasks(String filename) throws IOException {
+    public List<Task> readEmployeeTasksFromFile(String filename) throws IOException {
         List<Task> tasks = new ArrayList<>();
 
         ExcelReader excelReader = new ExcelReader(filename);

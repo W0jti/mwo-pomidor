@@ -5,30 +5,26 @@ import org.example.Data.FileSearcher;
 import org.example.model.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        String filePath = "src/resources/reporter-dane/reporter-dane/2012/01/Kowalski_Jan.xls";
-
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
-
-        List<Task> employeeTasks = excelReader.readEmployeeTasks(filePath);
-
         Report1Generator report1Generator = new Report1Generator();
-        report1Generator.countHoursPerProject(employeeTasks, new String[]{"Projekt1", "Projekt2", "Projekt3"});
+
         String folderPath = "/var/home/student/Desktop/dane/2012";
 
-        FileSearcher fileSearcher = new FileSearcher();
-        List<String> filePaths = fileSearcher.searchXlsFile(folderPath);
+        List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
+        List<Task> tasks = new ArrayList<>();
+
         for (String filepath: filePaths) {
-            System.out.println("Reading file: " + filepath);
-            List<Task> employeeTasks = excelReader.readEmployeeTasks(filepath);
-            for (Task task: employeeTasks) {
-                System.out.println(task);
-            }
-            System.out.println("\n\n");
+            List<Task> employeeTasks = excelReader.readEmployeeTasksFromFile(filepath);
+            tasks.addAll(employeeTasks);
         }
+
+        report1Generator.printRaport(tasks);
+
     }
 }
