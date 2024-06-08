@@ -1,8 +1,31 @@
 package org.example;
-
 import org.apache.commons.cli.*;
 
 public class Main {
+
+
+    public static void main(String[] args) throws IOException {
+        ////// ustaw ścieżkę do swojego pliku z danymi /////
+
+        String filePath = "D:\\reporter-dane\\2012\\01\\Kowalski_Jan.xls";
+        ExcelReaderFacade excelReader = new ExcelReaderFacade();
+
+        List<Task> employeeTasks = excelReader.readEmployeeTasks(filePath);
+
+        Report1Generator report1Generator = new Report1Generator();
+        report1Generator.countHoursPerProject(employeeTasks, new String[]{"Projekt1", "Projekt2", "Projekt3"});
+        String folderPath = "/var/home/student/Desktop/dane/2012";
+
+        FileSearcher fileSearcher = new FileSearcher();
+        List<String> filePaths = fileSearcher.searchXlsFile(folderPath);
+        for (String filepath: filePaths) {
+            System.out.println("Reading file: " + filepath);
+            List<Task> employeeTasks = excelReader.readEmployeeTasks(filepath);
+            for (Task task: employeeTasks) {
+                System.out.println(task);
+            }
+            System.out.println("\n\n");
+        }
     public static void main(String[] args) throws ParseException {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();

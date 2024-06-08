@@ -1,16 +1,18 @@
 package org.example.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 public class Task {
-    private final String name;
-    private final LocalDate date;
-    private final BigDecimal hours;
-    private final String projectName;
+    public String name;
+    public Date date;
+    public BigDecimal hours;
+    public String projectName;
+    public String employee;
 
-    public Task(String name, LocalDate date, BigDecimal hours, String projectName) {
+    public Task(String employee, String name, Date date, BigDecimal hours, String projectName) {
+        this.employee = employee;
         this.name = name;
         this.date = date;
         this.hours = hours;
@@ -21,7 +23,7 @@ public class Task {
         return name;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -32,6 +34,7 @@ public class Task {
     public String getProjectName() {
         return projectName;
     }
+    public String getEmployee(){return employee;}
 
     @Override
     public boolean equals(Object o) {
@@ -55,6 +58,7 @@ public class Task {
                 "name='" + name + '\'' +
                 ", date=" + date +
                 ", hours=" + hours +
+                ", employee=" + employee +
                 ", projectName='" + projectName + '\'' +
                 '}';
     }
