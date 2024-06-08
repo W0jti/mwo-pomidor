@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public class Report1Generator {
 
     public void countHoursPerProject(List<Task> tasks, String projectName){
-
         List<Task> filteredTasks = tasks.stream().filter(t -> t.projectName.equals(projectName)).toList();
         BigDecimal hoursPerProject = new BigDecimal(0);
         System.out.println("===== ZADANIA z: " + projectName + " =====");
@@ -29,9 +28,7 @@ public class Report1Generator {
     }
 
     public HashMap<String, BigDecimal> countProjectHours(List<Task> tasks, List<String> projectNames){
-
         HashMap<String, BigDecimal> projectHourMap = new HashMap<String, BigDecimal>();
-
         for (String projectName: projectNames) {
             List<Task> filteredTasks = tasks.stream().filter(t -> t.projectName.equals(projectName)).toList();
             BigDecimal hoursPerProject = new BigDecimal(0);
@@ -47,7 +44,7 @@ public class Report1Generator {
         return projectHourMap;
     }
 
-    public void printRaport(List<Task> tasks){
+    public void printReport(List<Task> tasks){
         List<String> projectNames = tasks.stream().map(Task::getProjectName).collect(Collectors.toList());
         HashMap<String, BigDecimal> projectHours = countProjectHours(tasks, projectNames);
 

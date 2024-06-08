@@ -4,10 +4,9 @@ import org.apache.commons.cli.*;
 import org.example.Data.ExcelReaderFacade;
 import org.example.Data.FileSearcher;
 import org.example.model.Task;
-import org.example.raport.RaportFacade;
+import org.example.raport.ReportFacade;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -72,21 +71,14 @@ public class Main {
         }
 
 
+        String folderPath = "/var/home/student/Desktop/dane/2012";
+
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
-        RaportFacade reportGenerator = new RaportFacade();
-
-        String folderPath ="C:\\Users\\admin\\Desktop\\mwo-pomidor\\src\\resources\\reporter-dane\\reporter-dane\\2012";
-
-
         List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
+        List<Task> tasks = excelReader.readTasksFromMultipleFiles(filePaths);
 
-        List<Task> tasks = new ArrayList<>();
-        for (String filepath: filePaths) {
-            List<Task> employeeTasks = excelReader.readEmployeeTasksFromFile(filepath);
-            tasks.addAll(employeeTasks);
-        }
-
-        reportGenerator.raport1(tasks);
+        ReportFacade reportGenerator = new ReportFacade(tasks);
+        reportGenerator.report2();
 
     }
 
