@@ -14,6 +14,10 @@ public class Main {
 
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
 
+        List<Task> employeeTasks = excelReader.readEmployeeTasks(filePath);
+
+        Report1Generator report1Generator = new Report1Generator();
+        report1Generator.countHoursPerProject(employeeTasks, new String[]{"Projekt1", "Projekt2", "Projekt3"});
         String folderPath = "/var/home/student/Desktop/dane/2012";
 
         FileSearcher fileSearcher = new FileSearcher();
