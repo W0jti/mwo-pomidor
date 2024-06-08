@@ -52,4 +52,4 @@ To generate a report, run the following command:
 
    `*#TODO*`
 
-`Made with ♡ by 🍅`
+**Made with ♡ by 🍅**
