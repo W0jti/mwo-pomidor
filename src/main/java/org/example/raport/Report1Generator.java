@@ -1,4 +1,4 @@
-package org.example;
+package org.example.raport;
 
 import org.example.model.Task;
 

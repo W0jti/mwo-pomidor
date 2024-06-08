@@ -4,6 +4,7 @@ import org.apache.commons.cli.*;
 import org.example.Data.ExcelReaderFacade;
 import org.example.Data.FileSearcher;
 import org.example.model.Task;
+import org.example.raport.RaportFacade;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,26 +13,6 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException, ParseException {
-        ////// ustaw ścieżkę do swojego pliku z danymi /////
-
-
-        ExcelReaderFacade excelReader = new ExcelReaderFacade();
-        Report1Generator report1Generator = new Report1Generator();
-
-        String folderPath = "/var/home/student/Desktop/dane/2012";
-      
-      
-        FileSearcher fileSearcher = new FileSearcher();
-        List<String> filePaths = fileSearcher.searchXlsFile(folderPath);
-        for (String filepath : filePaths) {
-            System.out.println("Reading file: " + filepath);
-            List<Task> employeeTasks = excelReader.readEmployeeTasks(filepath);
-            for (Task task : employeeTasks) {
-                System.out.println(task);
-            }
-            System.out.println("\n\n");
-        }
-
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         CommandLine cmd = parser.parse(options, args);
@@ -42,7 +23,6 @@ public class Main {
         options.addOption("employeefilter", true, "Filter by employee");//-employeefilter Kowalski_Jan
         options.addOption("taskfilter", true, "Filter bys task");//-taskfilter spotkanie
         options.addOption("help", false, "Help");//-help
-
 
         String source = cmd.getOptionValue("source");
         String repType = cmd.getOptionValue("reptype");
@@ -91,16 +71,21 @@ public class Main {
             System.out.println("Showing help");
         }
 
-        List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
-        List<Task> tasks = new ArrayList<>();
 
+        ExcelReaderFacade excelReader = new ExcelReaderFacade();
+        RaportFacade reportGenerator = new RaportFacade();
+
+        String folderPath = "/var/home/student/Desktop/dane/2012";
+
+        List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
+
+        List<Task> tasks = new ArrayList<>();
         for (String filepath: filePaths) {
             List<Task> employeeTasks = excelReader.readEmployeeTasksFromFile(filepath);
             tasks.addAll(employeeTasks);
         }
 
-        report1Generator.printRaport(tasks);
-
+        reportGenerator.raport1(tasks);
 
     }
 
