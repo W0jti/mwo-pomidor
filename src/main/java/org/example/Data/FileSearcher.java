@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class FileSearcher {
 
-    public List<String> searchXlsFile(String folderPath) throws IOException {
+    public static List<String> searchXlsFiles(String folderPath) throws IOException {
         List<String> xlsFilePaths;
         Path path = Paths.get(folderPath);
         try (Stream<Path> walk = Files.walk(path)) {

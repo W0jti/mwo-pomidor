@@ -3,31 +3,56 @@ package org.example;
 import org.example.model.Task;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Report1Generator {
 
-    public void countHoursPerProject(List<Task> tasks, String[] projectName){
+    public void countHoursPerProject(List<Task> tasks, String projectName){
 
-        for (String project : projectName){
-            List<Task> filteredTasks = tasks.stream().filter(t -> t.projectName.equals(project)).toList();
+        List<Task> filteredTasks = tasks.stream().filter(t -> t.projectName.equals(projectName)).toList();
+        BigDecimal hoursPerProject = new BigDecimal(0);
+        System.out.println("===== ZADANIA z: " + projectName + " =====");
+        if(!filteredTasks.isEmpty()){
+            for (Task task : filteredTasks) {
+                BigDecimal taskHours = task.getHours();
+                System.out.println("- " + task.getName() +": "+ taskHours +"h");
+                hoursPerProject = hoursPerProject.add(taskHours);
+            }
+            System.out.println("=================");
+            System.out.println("Liczba godzin dla " + projectName + ": " + hoursPerProject +"h \n\n");
+        } else {
+            System.out.println("Brak zadań w projekcie");
+        }
+    }
+
+    public HashMap<String, BigDecimal> countProjectHours(List<Task> tasks, List<String> projectNames){
+
+        HashMap<String, BigDecimal> projectHourMap = new HashMap<String, BigDecimal>();
+
+        for (String projectName: projectNames) {
+            List<Task> filteredTasks = tasks.stream().filter(t -> t.projectName.equals(projectName)).toList();
             BigDecimal hoursPerProject = new BigDecimal(0);
-
-            System.out.println("===== ZADANIA z: " + project + " =====");
-
             if(!filteredTasks.isEmpty()){
                 for (Task task : filteredTasks) {
                     BigDecimal taskHours = task.getHours();
-                    System.out.println("- " + task.getName() +": "+ taskHours +"h");
                     hoursPerProject = hoursPerProject.add(taskHours);
                 }
-
-                System.out.println("=================");
-                System.out.println("Liczba godzin dla " + project + ": " + hoursPerProject +"h \n\n");
-            } else {
-                System.out.println("Brak zadań w projekcie");
+                projectHourMap.put(projectName, hoursPerProject);
             }
+        }
 
+        return projectHourMap;
+    }
+
+    public void printRaport(List<Task> tasks){
+        List<String> projectNames = tasks.stream().map(Task::getProjectName).collect(Collectors.toList());
+        HashMap<String, BigDecimal> projectHours = countProjectHours(tasks, projectNames);
+
+        for (Map.Entry<String, BigDecimal> set : projectHours.entrySet()) {
+            System.out.println(set.getKey() + " - " + set.getValue() + "h");
         }
     }
 }

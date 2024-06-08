@@ -6,6 +6,7 @@ import org.example.Data.FileSearcher;
 import org.example.model.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -14,16 +15,12 @@ public class Main {
         ////// ustaw ścieżkę do swojego pliku z danymi /////
 
 
-        String filePath = "src/resources/reporter-dane/reporter-dane/2012/01/Kowalski_Jan.xls";
-
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
-
-        List<Task> employeeTasks = excelReader.readEmployeeTasks(filePath);
-
         Report1Generator report1Generator = new Report1Generator();
-        report1Generator.countHoursPerProject(employeeTasks, new String[]{"Projekt1", "Projekt2", "Projekt3"});
-        String folderPath = "/var/home/student/Desktop/dane/2012";
 
+        String folderPath = "/var/home/student/Desktop/dane/2012";
+      
+      
         FileSearcher fileSearcher = new FileSearcher();
         List<String> filePaths = fileSearcher.searchXlsFile(folderPath);
         for (String filepath : filePaths) {
@@ -93,6 +90,18 @@ public class Main {
             //show helper
             System.out.println("Showing help");
         }
+
+        List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
+        List<Task> tasks = new ArrayList<>();
+
+        for (String filepath: filePaths) {
+            List<Task> employeeTasks = excelReader.readEmployeeTasksFromFile(filepath);
+            tasks.addAll(employeeTasks);
+        }
+
+        report1Generator.printRaport(tasks);
+
+
     }
 
 }
