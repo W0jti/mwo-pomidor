@@ -71,7 +71,7 @@ public class Main {
         }
 
 
-        String folderPath = "src/resources/reporter-dane/reporter-dane/2012/01/Kowalski_Jan.xls";
+        String folderPath = "src/resources/reporter-dane/reporter-dane";
 
         ExcelReaderFacade excelReader = new ExcelReaderFacade();
         List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
