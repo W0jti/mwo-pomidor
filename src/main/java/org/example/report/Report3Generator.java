@@ -60,14 +60,34 @@ public class Report3Generator implements  IGenerateReportDetailed{
         return sortedHashMap;
     }
 
-    public void writeXls(ExcelExport excelExport, List<Task> tasks) {
-        for (Map.Entry<String, BigDecimal> entry : getReportData(tasks).entrySet()) {
-            String key = entry.getKey();
-            BigDecimal value = entry.getValue();
+    public void writeXls(ExcelExport excelExport, List<Task> tasks, boolean isDetailed) {
 
-            excelExport.addRow();
-            excelExport.addCell(0, key);
-            excelExport.addCell(1, value);
+        if(isDetailed) {
+            for (Map.Entry<String, HashMap<String, BigDecimal>> entry : getDetailedReportData(tasks).entrySet()) {
+                String key = entry.getKey();
+
+                excelExport.addRow();
+                excelExport.addCell(0, key);
+
+                for (Map.Entry<String, BigDecimal> entry2 : entry.getValue().entrySet()){
+                    String key2 = entry2.getKey();
+                    BigDecimal value = entry2.getValue();
+
+                    excelExport.addRow();
+                    excelExport.addCell(0, key);
+                    excelExport.addCell(1, key2);
+                    excelExport.addCell(2, value);
+                }
+            }
+        } else {
+            for (Map.Entry<String, BigDecimal> entry : getReportData(tasks).entrySet()) {
+                String key = entry.getKey();
+                BigDecimal value = entry.getValue();
+
+                excelExport.addRow();
+                excelExport.addCell(0, key);
+                excelExport.addCell(1, value);
+            }
         }
     }
 

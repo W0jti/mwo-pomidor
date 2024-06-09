@@ -45,7 +45,7 @@ public class Report2Generator implements IGenerateReportDetailed{
         return projectDataMap;
     }
 
-    public void writeXls(ExcelExport excelExport, List<Task> tasks) {
+    public void writeXls(ExcelExport excelExport, List<Task> tasks, boolean isDetailed) {
         for (Map.Entry<String, BigDecimal> entry : getReportData(tasks).entrySet()) {
             String key = entry.getKey();
             BigDecimal value = entry.getValue();
