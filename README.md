@@ -4,7 +4,7 @@ This program can be used to generate reports based on Excel files prepared. Inpu
 
 Users can create three report types:
 
-- **Report 1** - contains time for given projects and can be expanded for employee list in each project
+- **Report 1** - contains time for given projects and can be expanded to employee list in each project
 
    Example:  
 
