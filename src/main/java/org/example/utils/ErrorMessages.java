@@ -24,7 +24,8 @@ public class ErrorMessages {
     }
 
     public void show() {
-        System.out.println("\n");
+        System.out.println("\n\n");
+        System.out.println("Report generated with " +  errorMessages.size() + " error(s):");
         if (errorMessages.size() > 0) {
             for (String message: errorMessages) {
                 System.out.println(message );

@@ -9,10 +9,7 @@ import org.example.utils.StringExtensions;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ExcelReader implements IExcelReader{
 
@@ -64,30 +61,54 @@ public class ExcelReader implements IExcelReader{
                 cellTypes.add(cell.getCellType());
             }
 
+            boolean errors = false;
+            int rowNUmber = currentRow.getRowNum() + 1;
+
+
             if (cellTypes.contains(CellType.BLANK)){
-                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Row " + currentRow.getRowNum() + " contains blank cells");
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Row " + rowNUmber + " contains blank cells");
+                errors  = true;
                 continue;
             }
 
             if (currentRow.getCell(0).getCellType() != CellType.NUMERIC) {
-                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Date in row " + currentRow.getRowNum() + " is not valid date format");
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Date in row " + rowNUmber + " is not valid date format");
+                errors  = true;
                 continue;
             }
 
+
             if (currentRow.getCell(1).getCellType() != CellType.STRING) {
-                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Task name in  row " + currentRow.getRowNum() + " is not string");
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Task name in  row "  + rowNUmber + " is not string");
+                errors  = true;
                 continue;
             }
 
             if (currentRow.getCell(2).getCellType() != CellType.NUMERIC ) {
-                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Time in row " + currentRow.getRowNum() + " is not valid");
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Time in row " + rowNUmber +  " is not valid");
+                errors  = true;
                 continue;
             }
 
+
             if (currentRow.getCell(2).getNumericCellValue() < 0 ) {
-                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Time in row " + currentRow.getRowNum() + " is negative value");
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Time in row "  + rowNUmber + " is negative value");
+                errors  = true;
+            }
+
+            if (currentRow.getCell(0).getDateCellValue().before(new Date("01/01/2010"))) {;
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Date in row " + rowNUmber + " before project start date");
+                errors  = true;
+            }
+            if (currentRow.getCell(0).getDateCellValue().after(new Date())){
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Date in row " + rowNUmber + " future date");
+                errors  = true;
+            }
+
+            if (errors){
                 continue;
             }
+
 
             Date date = currentRow.getCell(0).getDateCellValue();
             String name = currentRow.getCell(1).getStringCellValue();

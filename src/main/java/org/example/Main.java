@@ -137,7 +137,6 @@ public class Main {
             IGenerateReport reportGenerator = ReportManager.getReportGenerator(reportOption);
 
 
-
             if(detailed) {
                 HashMap<String, HashMap<String, BigDecimal>> data = reportGenerator.getDetailedReportData(tasks);
                 ReportPrinter.printDetailed(data);
