@@ -4,13 +4,19 @@ This program can be used to generate reports based on Excel files prepared. Inpu
 
 Users can create three report types:
 
-- **Report 1** - contains time for given projects
+- **Report 1** - contains time for given projects and can be expanded for employee list in each project
 
    Example:  
 
-   `Project 1 - 30h`
-
-   `Project 2 - 50h`
+   ```
+      Project 1 - 100h
+           Jan Kowalski - 60 h
+           Krzysztof Kajak - 40 h
+  
+      Project 2 - 60h
+           Ola Cola - 40 h
+           Marek Zegarek - 20 h
+   ```
 
 - **Report 2** - contains total developers working time and their time devoted to specific projects
 
