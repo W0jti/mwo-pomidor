@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Report2Generator implements IGenerateReportDetailed{
+public class Report2Generator implements IGenerateReport{
 
     public HashMap<String, BigDecimal> getReportData(List<Task> tasks) {
         HashMap<String, BigDecimal> projectDataMap = new HashMap<String, BigDecimal>();

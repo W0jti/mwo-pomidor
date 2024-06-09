@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Report3Generator implements  IGenerateReportDetailed{
+public class Report3Generator implements  IGenerateReport{
 
     public HashMap<String, HashMap<String, BigDecimal>> getDetailedReportData(List<Task> tasks) {
         HashMap<String, HashMap<String, BigDecimal>> projectDataMap = new HashMap<>();

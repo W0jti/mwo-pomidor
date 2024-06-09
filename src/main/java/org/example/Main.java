@@ -5,9 +5,12 @@ import org.example.Data.ExcelReader;
 import org.example.Data.FileSearcher;
 import org.example.export.IExporter;
 import org.example.export.PdfExport;
+import org.example.filter.FilterQuery;
 import org.example.model.Task;
 import org.example.report.*;
 import org.example.utils.ExcelExport;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.SwingWrapper;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -39,7 +42,7 @@ public class Main {
 
     private final static Option ARG_HELP = Option.builder("h")
             .argName("help")
-            .longOpt("usage")
+            .longOpt("help")
             .desc("How to use")
             .build();
 
@@ -88,7 +91,28 @@ public class Main {
         excelExport.saveToFile();
     }
 
-    public static void main(String[] args) throws IOException, ParseException {
+    private final static Option ARG_FROM = Option.builder("f")
+            .argName("from")
+            .longOpt("from")
+            .desc("Date from")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_TO = Option.builder("t")
+            .argName("to")
+            .longOpt("to")
+            .desc("Date to")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_EMPLOYEE = Option.builder("emp")
+            .argName("employee")
+            .longOpt("employee")
+            .desc("Employee")
+            .hasArg()
+            .build();
+
+    public static void main(String[] args) throws IOException, ParseException, java.text.ParseException {
 
         Options options = new Options();
         options.addOption(ARG_PATH);
@@ -99,53 +123,41 @@ public class Main {
         options.addOption(ARG_EXPORT_FILENAME);
         options.addOption(ARG_CHART);
         options.addOption(ARG_REPORT_OPTION);
+        options.addOption(ARG_FROM);
+        options.addOption(ARG_TO);
+        options.addOption(ARG_EMPLOYEE);
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        if (cmd.hasOption("h")){
+        String from = cmd.hasOption(ARG_FROM) ? cmd.getOptionValue(ARG_FROM) : null;
+        String to = cmd.hasOption(ARG_TO) ? cmd.getOptionValue(ARG_TO) : null;
+        String employee = cmd.hasOption(ARG_EMPLOYEE) ? cmd.getOptionValue(ARG_EMPLOYEE) : null;
+        FilterQuery filterQuery = new FilterQuery(from,to,employee);
+
+        if (cmd.hasOption(ARG_HELP)){
             usage(options);
         }
 
-        if (cmd.hasOption("r") && cmd.hasOption("p")) {
-            String path = cmd.getOptionValue("p");
-            String reportOption = cmd.getOptionValue("r");
-            boolean detailed = cmd.hasOption("d");
+        if (cmd.hasOption(ARG_REPORT_OPTION) && cmd.hasOption(ARG_PATH)) {
+            String path = cmd.getOptionValue(ARG_PATH);
+            String reportOption = cmd.getOptionValue(ARG_REPORT_OPTION);
+            boolean detailed = cmd.hasOption(ARG_REPORT_TYPE);
             boolean hasExportType = cmd.hasOption("e");
             boolean hasPathExport = cmd.hasOption("pe");
             boolean hasExportFilename = cmd.hasOption("efn");
 
             List<String> filePaths = FileSearcher.searchXlsFiles(path);
-            List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths);
+            List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths, filterQuery);
 
             IExporter exporterPdf;
-            IGenerateReportDetailed reportGenerator;
+            IGenerateReport reportGenerator = ReportManager.getReportGenerator(reportOption);
             String exportFilename = hasExportFilename
-                                        ? cmd.getOptionValue("efn")
-                                        : "report";
+                    ? cmd.getOptionValue("efn")
+                    : "report";
             String filePathExport = hasPathExport
-                                        ? cmd.getOptionValue("pe") + "\\" +exportFilename+".xlsx"
-                                        : exportFilename+".xlsx";
-
-            switch (reportOption) {
-                case "1":
-                    reportGenerator = new Report1Generator();
-
-                    break;
-
-                case "2":
-                    reportGenerator = new Report2Generator();
-
-                    break;
-
-                case "3":
-                    reportGenerator = new Report3Generator();
-
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Invalid report type: " + reportOption);
-            }
+                    ? cmd.getOptionValue("pe") + "\\" +exportFilename+".xlsx"
+                    : exportFilename+".xlsx";
 
             if(detailed){
                 HashMap<String, HashMap<String, BigDecimal>> data = reportGenerator.getDetailedReportData(tasks);
@@ -155,6 +167,10 @@ public class Main {
                 HashMap<String, BigDecimal> data = reportGenerator.getReportData(tasks);
                 ReportPrinter.print(data);
                 exporterPdf = new PdfExport(data, null);
+
+                ExampleChart<CategoryChart> exampleChart = new Charts();
+                CategoryChart chart = exampleChart.getChart(data);
+                new SwingWrapper<CategoryChart>(chart).displayChart();
             }
 
             if (hasExportType) {

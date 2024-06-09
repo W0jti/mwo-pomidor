@@ -11,4 +11,5 @@ public interface IGenerateReport {
     public HashMap<String, BigDecimal> getReportData(List<Task> tasks);
 
     public void writeXls(ExcelExport excelExport, List<Task> tasks, boolean isDetailed);
+    public HashMap<String, HashMap<String, BigDecimal>> getDetailedReportData(List<Task> tasks);
 }
