@@ -10,24 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-// * Basic Bar Chart
-//         *
-//         * Demonstrates the following:
-//         * <ul>
-// * <li>Integer categories as List
-//        * <li>All positive values
-//        * <li>Single series
-//        * <li>Place legend at Inside-NW position
-//        * <li>Bar Chart Annotations
-//        */
 public class Charts implements ExampleChart<CategoryChart> {
-
-//    public static void main(String[] args) {
-//
-////        ExampleChart<CategoryChart> exampleChart = new Charts();
-//        CategoryChart chart = exampleChart.getChart();
-//        new SwingWrapper<CategoryChart>(chart).displayChart();
-//    }
 
     public CategoryChart getChart(HashMap<String, BigDecimal> data) {
 
