@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface IGenerateReport {
     public HashMap<String, BigDecimal> getReportData(List<Task> tasks);
+    public HashMap<String, HashMap<String, BigDecimal>> getDetailedReportData(List<Task> tasks);
 }

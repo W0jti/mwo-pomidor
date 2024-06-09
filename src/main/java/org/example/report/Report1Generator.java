@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Report1Generator implements IGenerateReportDetailed{
+public class Report1Generator implements IGenerateReport{
 
     public HashMap<String, BigDecimal> getReportData(List<Task> tasks){
         List<String> projectNames = tasks.stream().map(Task::getProjectName).collect(Collectors.toList());

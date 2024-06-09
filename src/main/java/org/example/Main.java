@@ -5,6 +5,7 @@ import org.example.Data.ExcelReader;
 import org.example.Data.FileSearcher;
 import org.example.export.IExporter;
 import org.example.export.PdfExport;
+import org.example.filter.FilterQuery;
 import org.example.model.Task;
 import org.example.report.*;
 
@@ -54,7 +55,28 @@ public class Main {
             .desc("Generate chart image")
             .build();
 
-    public static void main(String[] args) throws IOException, ParseException {
+    private final static Option ARG_FROM = Option.builder("from")
+            .argName("from")
+            .longOpt("from")
+            .desc("Date from")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_TO = Option.builder("to")
+            .argName("to")
+            .longOpt("to")
+            .desc("Date to")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_EMPLOYEE = Option.builder("employee")
+            .argName("employee")
+            .longOpt("employee")
+            .desc("Employeee")
+            .hasArg()
+            .build();
+
+    public static void main(String[] args) throws IOException, ParseException, java.text.ParseException {
 
         Options options = new Options();
         options.addOption(ARG_PATH);
@@ -63,9 +85,17 @@ public class Main {
         options.addOption(ARG_EXPORT);
         options.addOption(ARG_CHART);
         options.addOption(ARG_REPORT_OPTION);
+        options.addOption(ARG_FROM);
+        options.addOption(ARG_TO);
+        options.addOption(ARG_EMPLOYEE);
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
+
+        String from = cmd.hasOption("from") ? cmd.getOptionValue("from") : null;
+        String to = cmd.hasOption("to") ? cmd.getOptionValue("to") : null;
+        String employee = cmd.hasOption("employee") ? cmd.getOptionValue("employee") : null;
+        FilterQuery filterQuery = new FilterQuery(from,to,employee);
 
         if (cmd.hasOption("h")){
             usage(options);
@@ -77,26 +107,11 @@ public class Main {
             boolean detailed = cmd.hasOption("d");
 
             List<String> filePaths = FileSearcher.searchXlsFiles(path);
-            List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths);
+            List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths, filterQuery);
 
             IExporter exporter;
-            IGenerateReportDetailed reportGenerator;
-            switch (reportOption) {
-                case "1":
-                    reportGenerator = new Report1Generator();
-                    break;
+            IGenerateReport reportGenerator = ReportManager.getReportGenerator(reportOption);
 
-                case "2":
-                    reportGenerator = new Report2Generator();
-                    break;
-
-                case "3":
-                    reportGenerator = new Report3Generator();
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Invalid report type: " + reportOption);
-            }
 
             if(detailed){
                 HashMap<String, HashMap<String, BigDecimal>> data = reportGenerator.getDetailedReportData(tasks);

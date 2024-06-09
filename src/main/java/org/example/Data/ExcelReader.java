@@ -1,6 +1,7 @@
 package org.example.Data;
 
 import org.apache.poi.ss.usermodel.*;
+import org.example.filter.FilterQuery;
 import org.example.model.Task;
 import org.example.utils.StringExtensions;
 
@@ -37,7 +38,7 @@ public class ExcelReader implements IExcelReader{
         return projectNames;
     }
 
-    public List<Task> readProjectTasks(String projectName) throws IOException {
+    public List<Task> readProjectTasks(String projectName, FilterQuery filterQuery) throws IOException {
         List<Task> tasks = new ArrayList<Task>();
 
         File file = new File(filepath);
@@ -70,6 +71,17 @@ public class ExcelReader implements IExcelReader{
             String name = currentRow.getCell(1).getStringCellValue();
             BigDecimal hours = BigDecimal.valueOf(currentRow.getCell(2).getNumericCellValue());
 
+            if (filterQuery.fromDate != null && date.before(filterQuery.fromDate)) {
+                continue;
+            }
+
+            if (filterQuery.toDate != null && date.after(filterQuery.toDate)){
+                continue;
+            }
+
+            if (filterQuery.employee != null & !employee.equals(filterQuery.employee)) {
+                continue;
+            }
 
             Task task = new Task(employee, name, date, hours, projectName);
             tasks.add(task);
@@ -79,23 +91,23 @@ public class ExcelReader implements IExcelReader{
         return tasks;
     }
 
-    public static List<Task> readEmployeeTasksFromFile(String filename) throws IOException {
+    public static List<Task> readEmployeeTasksFromFile(String filename, FilterQuery filterQuery) throws IOException {
         List<Task> tasks = new ArrayList<>();
 
         ExcelReader excelReader = new ExcelReader(filename);
         List<String> projects = excelReader.readProjectNames();
         for (String project: projects) {
-            List<Task> projectTasks = excelReader.readProjectTasks(project);
+            List<Task> projectTasks = excelReader.readProjectTasks(project, filterQuery);
             tasks.addAll(projectTasks);
         }
 
         return tasks;
     }
 
-    public static List<Task> readTasksFromMultipleFiles(List<String> filePaths) throws IOException {
+    public static List<Task> readTasksFromMultipleFiles(List<String> filePaths, FilterQuery filterQuery) throws IOException {
         List<Task> tasks = new ArrayList<>();
         for (String filepath: filePaths) {
-            List<Task> employeeTasks = readEmployeeTasksFromFile(filepath);
+            List<Task> employeeTasks = readEmployeeTasksFromFile(filepath, filterQuery);
             tasks.addAll(employeeTasks);
         }
 
