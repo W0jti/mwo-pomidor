@@ -79,7 +79,7 @@ public class ExcelReader implements IExcelReader{
                 continue;
             }
 
-            if (filterQuery.employee != null & !employee.equals(filterQuery.employee)) {
+            if (filterQuery.employee != null & !employee.equalsIgnoreCase(filterQuery.employee)) {
                 continue;
             }
 

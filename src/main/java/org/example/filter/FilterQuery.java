@@ -22,7 +22,7 @@ public class FilterQuery {
         }
 
         if (employee != null) {
-            this.employee = employee.replace("_", " " );
+            this.employee = employee;
         }
 
     }
