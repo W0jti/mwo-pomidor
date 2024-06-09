@@ -54,7 +54,7 @@ To generate a report use:
 
 You can use the following flags:
 
-**`[-c]` `[-d]` `[-e <export>]` `[-h]` `[-p <path>]` `[-r <reportOption>]` `f` `t` `emp`**
+**`[-c]` `[-d]` `[-e <export>]` `[-h]` `[-p <path>]` `[-r <reportOption>]` `[-f]` `[-t]` `[-emp]`**
 
     -c,--chart                          Generate chart image
     -d,--report-type                    Report type: detailed
