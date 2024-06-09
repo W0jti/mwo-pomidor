@@ -12,27 +12,28 @@ import java.math.BigDecimal;
 
 public class ExcelExport {
     private final String fileName;
-    private final String[] headerss;
     private final Workbook workbook;
     private final Sheet sheet;
     private int rowsCount = 1;
     private Row lastRow;
 
     public ExcelExport(
-            String fileName,
-            String[] headers
+            String fileName
     ) {
         this.fileName = fileName;
-        this.headerss = headers;
 
         workbook = new XSSFWorkbook();
         sheet = workbook.createSheet("Tasks");
 
+
+    }
+
+    public void addHeaderRow(String[] headers) {
         // Nagłówki kolumn
         Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < headerss.length; i++) {
+        for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
-            cell.setCellValue(headerss[i]);
+            cell.setCellValue(headers[i]);
             sheet.setColumnWidth(i, 6000);
         }
     }

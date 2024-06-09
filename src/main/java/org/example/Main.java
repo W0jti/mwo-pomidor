@@ -50,13 +50,6 @@ public class Main {
             .hasArg()
             .build();
 
-//    private final static Option ARG_EXPORT = Option.builder("e")
-//            .argName("export")
-//            .longOpt("Export type")
-//            .desc("Export pdf")
-//            .hasArg()
-//            .build();
-
     private final static Option ARG_PATH_EXPORT = Option.builder("pe")
             .argName("pathExport")
             .longOpt("Export path")
@@ -81,11 +74,10 @@ public class Main {
     private static void writeDataToExcel(
             IGenerateReportDetailed reportGenerator,
             String filePathExport,
-            String[] HEADERS,
             List<Task> tasks,
             boolean isDetailed
     ){
-        ExcelExport excelExport = new ExcelExport(filePathExport, HEADERS);
+        ExcelExport excelExport = new ExcelExport(filePathExport);
 
         reportGenerator.writeXls(
                 excelExport,
@@ -132,29 +124,22 @@ public class Main {
                                         ? cmd.getOptionValue("efn")
                                         : "report";
             String filePathExport = hasPathExport
-                                        ? cmd.getOptionValue("pe")
-                                        : "C:\\Users\\sebas\\Desktop\\"+exportFilename+".xlsx";
-            String[] HEADERS = new String[0];
+                                        ? cmd.getOptionValue("pe") + "\\" +exportFilename+".xlsx"
+                                        : exportFilename+".xlsx";
 
             switch (reportOption) {
                 case "1":
                     reportGenerator = new Report1Generator();
-
-                    HEADERS = new String[]{"Nazwa projektu", "Liczba godzin"};
 
                     break;
 
                 case "2":
                     reportGenerator = new Report2Generator();
 
-                    HEADERS = new String[]{"Nazwa projektu", "Liczba godzin"};
-
                     break;
 
                 case "3":
                     reportGenerator = new Report3Generator();
-
-                    HEADERS = new String[]{"Nazwa projektu", "Nazwa zadania", "Liczba godzin"};
 
                     break;
 
@@ -183,7 +168,6 @@ public class Main {
                         writeDataToExcel(
                                 reportGenerator,
                                 filePathExport,
-                                HEADERS,
                                 tasks,
                                 true
                         );
@@ -197,7 +181,6 @@ public class Main {
                         writeDataToExcel(
                                 reportGenerator,
                                 filePathExport,
-                                HEADERS,
                                 tasks,
                                 false
                         );

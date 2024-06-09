@@ -63,6 +63,9 @@ public class Report3Generator implements  IGenerateReportDetailed{
     public void writeXls(ExcelExport excelExport, List<Task> tasks, boolean isDetailed) {
 
         if(isDetailed) {
+            String[] headers = new String[]{"Nazwa projektu", "Nazwa zadania", "Liczba godzin"};
+            excelExport.addHeaderRow(headers);
+
             for (Map.Entry<String, HashMap<String, BigDecimal>> entry : getDetailedReportData(tasks).entrySet()) {
                 String key = entry.getKey();
 
@@ -78,8 +81,12 @@ public class Report3Generator implements  IGenerateReportDetailed{
                     excelExport.addCell(1, key2);
                     excelExport.addCell(2, value);
                 }
+                excelExport.addRow();
             }
         } else {
+            String[] headers = new String[]{"Nazwa zadania", "Liczba godzin"};
+            excelExport.addHeaderRow(headers);
+
             for (Map.Entry<String, BigDecimal> entry : getReportData(tasks).entrySet()) {
                 String key = entry.getKey();
                 BigDecimal value = entry.getValue();
