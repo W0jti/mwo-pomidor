@@ -13,6 +13,7 @@ for manual testing performed for specific data package: `src/resources/reporter-
 - **Report 2**:
 
 basic version
+
 1) Check if the report has been generated
 2) Check if all employees are listed
 3) Check if proper time (h) is given for each employee
@@ -21,6 +22,7 @@ basic version
 6) Check if report for specific employee can be generated + proper data for that employee
 
 extended version
+
 7) Check if the report has been generated 
 8) Check if all projects for each employee are listed
 9) Check if time (h) for employee =  project time sum
@@ -33,6 +35,7 @@ extended version
 - **Report 3**:
 
 basic version
+
 1) Check if the report has been generated
 2) Check if all projects are listed
 3) Check if proper time (h) is given for each project
@@ -42,6 +45,7 @@ basic version
 7) Check if report for specific employee can be generated + proper data for that employee
 
 extended version
+
 7) Check if the report has been generated
 8) Check sorting by project duration
 9) Check sorting by task duration for each project
