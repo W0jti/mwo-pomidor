@@ -22,9 +22,18 @@ public class Charts implements BarChart<CategoryChart> {
         chart.getStyler().setHasAnnotations(true);
 
         // Series
-        List<String> x = new ArrayList<String>(data.keySet());
+        List<String> x = new ArrayList<String>(data.keySet()).stream().map(s -> s.length() > 20 ? s.substring(0,20) + "." : s).toList();
         List<BigDecimal> y = new ArrayList<BigDecimal>(data.values());
+
+        if (x.size() > 10 && y.size()> 10){
+            x = x.subList(0,10);
+            y = y.subList(0,10);
+        }
         chart.addSeries("Raport", x,y);
+
+        chart.getStyler().setXAxisLabelAlignmentVertical(Styler.TextAlignment.Right);
+        chart.getStyler().setXAxisLabelAlignment(Styler.TextAlignment.Right);
+        chart.getStyler().setXAxisLabelRotation(45);
 
         return chart;
     }
