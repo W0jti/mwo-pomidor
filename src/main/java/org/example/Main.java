@@ -7,7 +7,9 @@ import org.example.export.IExporter;
 import org.example.export.PdfExport;
 import org.example.filter.FilterQuery;
 import org.example.model.Task;
-import org.example.report.*;
+import org.example.report.IGenerateReport;
+import org.example.report.ReportManager;
+import org.example.report.ReportPrinter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -121,6 +123,10 @@ public class Main {
                 HashMap<String, BigDecimal> data = reportGenerator.getReportData(tasks);
                 ReportPrinter.print(data);
                 exporter = new PdfExport(data, null);
+
+//                ExampleChart<CategoryChart> exampleChart = new Charts();
+//                CategoryChart chart = exampleChart.getChart(data);
+//                new SwingWrapper<CategoryChart>(chart).displayChart();
             }
 
             if (cmd.hasOption("e")) {
