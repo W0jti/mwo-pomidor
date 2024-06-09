@@ -44,7 +44,7 @@ public class Main {
 
     private final static Option ARG_EXPORT = Option.builder("e")
             .argName("export")
-            .longOpt("Export type")
+            .longOpt("export")
             .desc("Export pdf")
             .hasArg()
             .build();
@@ -72,7 +72,7 @@ public class Main {
     private final static Option ARG_EMPLOYEE = Option.builder("emp")
             .argName("employee")
             .longOpt("employee")
-            .desc("Employeee")
+            .desc("Employee")
             .hasArg()
             .build();
 
