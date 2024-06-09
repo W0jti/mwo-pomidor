@@ -1,10 +1,12 @@
 package org.example.report;
 
 import org.example.model.Task;
+import org.example.utils.ExcelExport;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Report1Generator implements IGenerateReportDetailed{
@@ -52,6 +54,17 @@ public class Report1Generator implements IGenerateReportDetailed{
         }
 
         return projectSummary;
+    }
+
+    public void writeXls(ExcelExport excelExport, List<Task> tasks) {
+        for (Map.Entry<String, BigDecimal> entry : getReportData(tasks).entrySet()) {
+            String key = entry.getKey();
+            BigDecimal value = entry.getValue();
+
+            excelExport.addRow();
+            excelExport.addCell(0, key);
+            excelExport.addCell(1, value);
+        }
     }
 
 }

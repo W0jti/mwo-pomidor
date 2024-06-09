@@ -10,7 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public class WriteToExcel {
+public class ExcelExport {
     private final String fileName;
     private final String[] headerss;
     private final Workbook workbook;
@@ -18,7 +18,7 @@ public class WriteToExcel {
     private int rowsCount = 1;
     private Row lastRow;
 
-    public WriteToExcel(
+    public ExcelExport(
             String fileName,
             String[] headers
     ) {

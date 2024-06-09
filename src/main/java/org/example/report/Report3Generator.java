@@ -1,6 +1,7 @@
 package org.example.report;
 
 import org.example.model.Task;
+import org.example.utils.ExcelExport;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -57,6 +58,17 @@ public class Report3Generator implements  IGenerateReportDetailed{
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
         return sortedHashMap;
+    }
+
+    public void writeXls(ExcelExport excelExport, List<Task> tasks) {
+        for (Map.Entry<String, BigDecimal> entry : getReportData(tasks).entrySet()) {
+            String key = entry.getKey();
+            BigDecimal value = entry.getValue();
+
+            excelExport.addRow();
+            excelExport.addCell(0, key);
+            excelExport.addCell(1, value);
+        }
     }
 
 }

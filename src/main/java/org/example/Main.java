@@ -2,13 +2,12 @@ package org.example;
 
 import org.apache.commons.cli.*;
 import org.example.Data.ExcelReader;
-import org.example.Data.ExcelReaderFacade;
 import org.example.Data.FileSearcher;
 import org.example.export.IExporter;
 import org.example.export.PdfExport;
 import org.example.model.Task;
-import org.example.raport.ReportFacade;
 import org.example.report.*;
+import org.example.utils.ExcelExport;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -56,6 +55,23 @@ public class Main {
             .desc("Generate chart image")
             .build();
 
+
+    private static void writeDataToExcel(
+            IGenerateReportDetailed reportGenerator,
+            String filePathExport,
+            String[] HEADERS,
+            List<Task> tasks
+    ){
+        ExcelExport excelExport = new ExcelExport(filePathExport, HEADERS);
+
+        reportGenerator.writeXls(
+                excelExport,
+                tasks
+        );
+
+        excelExport.saveToFile();
+    }
+
     public static void main(String[] args) throws IOException, ParseException {
 
         Options options = new Options();
@@ -86,6 +102,17 @@ public class Main {
             switch (reportOption) {
                 case "1":
                     reportGenerator = new Report1Generator();
+
+                    String filePathExport = "C:\\Users\\sebas\\Desktop\\report1.xlsx";
+                    String[] HEADERS = {"Nazwa projektu", "Liczba godzin"};
+
+                    writeDataToExcel(
+                            reportGenerator,
+                            filePathExport,
+                            HEADERS,
+                            tasks
+                    );
+
                     break;
 
                 case "2":
@@ -120,17 +147,6 @@ public class Main {
                 }
             }
         }
-
-        String folderPath = "D:\\projects\\studia-podyplomowe\\pracownia-projektowa\\reporter-dane\\reporter-dane\\2012\\01\\Kowalski_Jan.xls";
-
-        ExcelReaderFacade excelReader = new ExcelReaderFacade();
-        List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
-        List<Task> tasks = excelReader.readTasksFromMultipleFiles(filePaths);
-
-        String filePath = "C:\\Users\\sebas\\Desktop\\raport3.xlsx";
-        ReportFacade reportGenerator = new ReportFacade(tasks, filePath);
-//        reportGenerator.report1("xls");
-        reportGenerator.report3("xls");
     }
 
     public static void usage(Options options) {
