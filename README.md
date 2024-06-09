@@ -59,9 +59,10 @@ You can use the following flags:
     -c,--chart                          Generate chart image
     -d,--report-type                    Report type: detailed
     -e,--Export type <export>           Export pdf
-    -h,--usage                          How to use
+    -h,--help                          How to use
     -p,--path <path>                    Folder/file path
     -r,--report-option <reportOption>   Report type: 1/2/3
+
 
 Example:
 

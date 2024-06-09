@@ -38,7 +38,7 @@ public class Main {
 
     private final static Option ARG_HELP = Option.builder("h")
             .argName("help")
-            .longOpt("usage")
+            .longOpt("help")
             .desc("How to use")
             .build();
 
@@ -55,21 +55,21 @@ public class Main {
             .desc("Generate chart image")
             .build();
 
-    private final static Option ARG_FROM = Option.builder("from")
+    private final static Option ARG_FROM = Option.builder("f")
             .argName("from")
             .longOpt("from")
             .desc("Date from")
             .hasArg()
             .build();
 
-    private final static Option ARG_TO = Option.builder("to")
+    private final static Option ARG_TO = Option.builder("t")
             .argName("to")
             .longOpt("to")
             .desc("Date to")
             .hasArg()
             .build();
 
-    private final static Option ARG_EMPLOYEE = Option.builder("employee")
+    private final static Option ARG_EMPLOYEE = Option.builder("emp")
             .argName("employee")
             .longOpt("employee")
             .desc("Employeee")
@@ -92,9 +92,9 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        String from = cmd.hasOption("from") ? cmd.getOptionValue("from") : null;
-        String to = cmd.hasOption("to") ? cmd.getOptionValue("to") : null;
-        String employee = cmd.hasOption("employee") ? cmd.getOptionValue("employee") : null;
+        String from = cmd.hasOption("f") ? cmd.getOptionValue("f") : null;
+        String to = cmd.hasOption("t") ? cmd.getOptionValue("t") : null;
+        String employee = cmd.hasOption("emp") ? cmd.getOptionValue("emp") : null;
         FilterQuery filterQuery = new FilterQuery(from,to,employee);
 
         if (cmd.hasOption("h")){
