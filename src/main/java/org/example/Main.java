@@ -13,7 +13,6 @@ import org.example.report.ReportPrinter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,26 +94,26 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
 
-        String from = cmd.hasOption(ARG_FROM) ? cmd.getOptionValue(ARG_FROM) : null;
-        String to = cmd.hasOption(ARG_TO) ? cmd.getOptionValue(ARG_TO) : null;
-        String employee = cmd.hasOption(ARG_EMPLOYEE) ? cmd.getOptionValue(ARG_EMPLOYEE) : null;
+        String from = cmd.hasOption("f") ? cmd.getOptionValue("f") : null;
+        String to = cmd.hasOption("t") ? cmd.getOptionValue("t") : null;
+        String employee = cmd.hasOption("emp") ? cmd.getOptionValue("emp") : null;
         FilterQuery filterQuery = new FilterQuery(from,to,employee);
 
-        if (cmd.hasOption(ARG_HELP)){
+        if (cmd.hasOption("h")){
             usage(options);
         }
 
-
-        if (cmd.hasOption(ARG_REPORT_OPTION) && cmd.hasOption(ARG_PATH)) {
-            String path = cmd.getOptionValue(ARG_PATH);
-            String reportOption = cmd.getOptionValue(ARG_REPORT_OPTION);
-            boolean detailed = cmd.hasOption(ARG_REPORT_TYPE);
+        if (cmd.hasOption("r") && cmd.hasOption("p")) {
+            String path = cmd.getOptionValue("p");
+            String reportOption = cmd.getOptionValue("r");
+            boolean detailed = cmd.hasOption("d");
 
             List<String> filePaths = FileSearcher.searchXlsFiles(path);
             List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths, filterQuery);
 
             IExporter exporter;
             IGenerateReport reportGenerator = ReportManager.getReportGenerator(reportOption);
+
 
             if(detailed){
                 HashMap<String, HashMap<String, BigDecimal>> data = reportGenerator.getDetailedReportData(tasks);
@@ -124,14 +123,14 @@ public class Main {
                 HashMap<String, BigDecimal> data = reportGenerator.getReportData(tasks);
                 ReportPrinter.print(data);
                 exporter = new PdfExport(data, null);
+
+//                ExampleChart<CategoryChart> exampleChart = new Charts();
+//                CategoryChart chart = exampleChart.getChart(data);
+//                new SwingWrapper<CategoryChart>(chart).displayChart();
             }
 
-            if (cmd.hasOption(ARG_EXPORT)) {
-
-                for (String arg :Arrays.stream(cmd.getOptionValues(ARG_EXPORT)).toList()) {
-                    System.out.println(arg);
-                }
-                String fileName =  cmd.getOptionValue(ARG_EXPORT);
+            if (cmd.hasOption("e")) {
+                String fileName =  cmd.getOptionValue("e");
                 if (detailed){
                     exporter.exportDetailed(fileName);
                 }
