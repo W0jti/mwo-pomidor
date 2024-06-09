@@ -129,7 +129,7 @@ You can use the following flags:
 
 Example:
 
-`java -jar target/mwo-pomidor-1.0-SNAPSHOT-jar-with-dependency.jar -p <path> -r 1 -e file_name`
+`java -jar target/mwo-pomidor-1.0-SNAPSHOT-jar-with-dependencies.jar -p <path> -r 1 -e file_name`
 
 generates report 1 (from folder/file located in path) to file_name file.
 
