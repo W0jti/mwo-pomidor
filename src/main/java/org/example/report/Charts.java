@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Charts implements ExampleChart<CategoryChart> {
+public class Charts implements BarChart<CategoryChart> {
 
     public CategoryChart getChart(HashMap<String, BigDecimal> data) {
 
@@ -24,7 +24,7 @@ public class Charts implements ExampleChart<CategoryChart> {
         // Series
         List<String> x = new ArrayList<String>(data.keySet());
         List<BigDecimal> y = new ArrayList<BigDecimal>(data.values());
-        chart.addSeries("Raport 1", x,y);
+        chart.addSeries("Raport", x,y);
 
         return chart;
     }

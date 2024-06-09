@@ -49,7 +49,7 @@ public class PdfExport implements IExporter{
                 contents.endText();
             }
 
-            doc.save(filename + ".pdf");
+            doc.save(filename);
         }
     }
 
@@ -84,7 +84,7 @@ public class PdfExport implements IExporter{
                 contents.endText();
             }
 
-            doc.save(filename + ".pdf");
+            doc.save(filename);
         }
     }
 }

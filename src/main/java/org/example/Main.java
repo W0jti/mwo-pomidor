@@ -8,7 +8,8 @@ import org.example.export.PdfExport;
 import org.example.filter.FilterQuery;
 import org.example.model.Task;
 import org.example.report.*;
-import org.example.utils.ExcelExport;
+import org.example.utils.ErrorMessages;
+import org.example.export.ExcelExport;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.SwingWrapper;
 
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class Main {
 
@@ -53,8 +53,8 @@ public class Main {
             .hasArg()
             .build();
 
-    private final static Option ARG_PATH_EXPORT = Option.builder("pe")
-            .argName("pathExport")
+    private final static Option ARG_PATH_EXPORT = Option.builder("ep")
+            .argName("exportPath")
             .longOpt("Export path")
             .desc("Export path")
             .hasArg()
@@ -72,24 +72,6 @@ public class Main {
             .longOpt("chart")
             .desc("Generate chart image")
             .build();
-
-
-    private static void writeDataToExcel(
-            IGenerateReport reportGenerator,
-            String filePathExport,
-            List<Task> tasks,
-            boolean isDetailed
-    ){
-        ExcelExport excelExport = new ExcelExport(filePathExport);
-
-        reportGenerator.writeXls(
-                excelExport,
-                tasks,
-                isDetailed
-        );
-
-        excelExport.saveToFile();
-    }
 
     private final static Option ARG_FROM = Option.builder("f")
             .argName("from")
@@ -143,44 +125,61 @@ public class Main {
             String path = cmd.getOptionValue(ARG_PATH);
             String reportOption = cmd.getOptionValue(ARG_REPORT_OPTION);
             boolean detailed = cmd.hasOption(ARG_REPORT_TYPE);
-            boolean hasExportType = cmd.hasOption("e");
-            boolean hasPathExport = cmd.hasOption("pe");
-            boolean hasExportFilename = cmd.hasOption("efn");
+
+            boolean hasExportType = cmd.hasOption(ARG_EXPORT_TYPE);
+            boolean hasPathExport = cmd.hasOption(ARG_PATH_EXPORT);
+            boolean hasExportFilename = cmd.hasOption(ARG_EXPORT_FILENAME);
 
             List<String> filePaths = FileSearcher.searchXlsFiles(path);
             List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths, filterQuery);
 
             IExporter exporterPdf;
             IGenerateReport reportGenerator = ReportManager.getReportGenerator(reportOption);
-            String exportFilename = hasExportFilename
-                    ? cmd.getOptionValue("efn")
-                    : "report";
-            String filePathExport = hasPathExport
-                    ? cmd.getOptionValue("pe") + "\\" +exportFilename+".xlsx"
-                    : exportFilename+".xlsx";
 
-            if(detailed){
+
+
+            if(detailed) {
                 HashMap<String, HashMap<String, BigDecimal>> data = reportGenerator.getDetailedReportData(tasks);
                 ReportPrinter.printDetailed(data);
                 exporterPdf = new PdfExport(null, data);
+
             } else {
                 HashMap<String, BigDecimal> data = reportGenerator.getReportData(tasks);
                 ReportPrinter.print(data);
                 exporterPdf = new PdfExport(data, null);
 
-                ExampleChart<CategoryChart> exampleChart = new Charts();
-                CategoryChart chart = exampleChart.getChart(data);
-                new SwingWrapper<CategoryChart>(chart).displayChart();
+
+                if (cmd.hasOption(ARG_CHART)){
+                    BarChart<CategoryChart> exampleChart = new Charts();
+                    CategoryChart chart = exampleChart.getChart(data);
+                    new SwingWrapper<CategoryChart>(chart).displayChart();
+                }
             }
 
             if (hasExportType) {
 
-                String exportType =  cmd.getOptionValue("e"); // pdf or excel
-                System.out.println("========: " + exportType + " ++++: " + Objects.equals(exportType, "excel"));
+                String exportFilename = hasExportFilename
+                        ? cmd.getOptionValue(ARG_EXPORT_FILENAME)
+                        : "report";
+
+                String filePathExport = hasPathExport
+                        ? cmd.getOptionValue(ARG_PATH_EXPORT) + "\\" +exportFilename
+                        : exportFilename;
+
+                filePathExport = cmd.getOptionValue(ARG_EXPORT_TYPE).equals("excel")
+                        ? filePathExport+".xlsx"
+                        : filePathExport+".pdf";
+
+
+                System.out.println(cmd.getOptionValue(ARG_EXPORT_TYPE));
+
+                String exportType =  cmd.getOptionValue(ARG_EXPORT_TYPE);
+
                 if (detailed){
-                    if (Objects.equals(exportType, "pdf")){
+                    if (exportType.equals("pdf")) {
                         exporterPdf.exportDetailed(filePathExport);
-                    } else if (Objects.equals(exportType, "excel")){
+                    }
+                    else if (exportType.equals("excel")){
                         writeDataToExcel(
                                 reportGenerator,
                                 filePathExport,
@@ -188,12 +187,14 @@ public class Main {
                                 true
                         );
                     } else {
-                        System.out.println("nie ma takiego typu exportu");
+                        System.out.println("Invalid export type");
                     }
+
                 } else {
-                    if (Objects.equals(exportType, "pdf")){
+
+                    if (exportType.equals("pdf")){
                         exporterPdf.export(filePathExport);
-                    } else if (Objects.equals(exportType, "excel")){
+                    } else if (exportType.equals("excel")){
                         writeDataToExcel(
                                 reportGenerator,
                                 filePathExport,
@@ -201,11 +202,13 @@ public class Main {
                                 false
                         );
                     } else {
-                        System.out.println("nie ma takiego typu exportu");
+                        System.out.println("Invalid export type");
                     }
                 }
             }
         }
+
+        ErrorMessages.getInstance().show();
     }
 
     public static void usage(Options options) {
@@ -214,5 +217,22 @@ public class Main {
 
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("ReportGenerator", header, options, footer, true);
+    }
+
+    private static void writeDataToExcel(
+            IGenerateReport reportGenerator,
+            String filePathExport,
+            List<Task> tasks,
+            boolean isDetailed
+    ){
+        ExcelExport excelExport = new ExcelExport(filePathExport);
+
+        reportGenerator.writeXls(
+                excelExport,
+                tasks,
+                isDetailed
+        );
+
+        excelExport.saveToFile();
     }
 }
