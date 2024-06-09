@@ -75,7 +75,7 @@ public class Main {
 
 
     private static void writeDataToExcel(
-            IGenerateReportDetailed reportGenerator,
+            IGenerateReport reportGenerator,
             String filePathExport,
             List<Task> tasks,
             boolean isDetailed
