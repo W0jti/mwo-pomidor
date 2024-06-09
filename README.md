@@ -48,8 +48,30 @@ Users can create three report types:
 ### Usage
 By default report is generated in console, but there is option to generate output Excel file with the bar charts.
 
-To generate a report, run the following command:
+To generate a report use:
 
-   `*#TODO*`
+`java -jar target/mwo-pomidor-1.0-SNAPSHOT-jar-with-dependency.jar`
 
+You can use the following flags:
+
+**`[-c]` `[-d]` `[-e <export>]` `[-h]` `[-p <path>]` `[-r <reportOption>]`**
+
+    -c,--chart                          Generate chart image
+    -d,--report-type                    Report type: detailed
+    -e,--Export type <export>           Export pdf
+    -h,--usage                          How to use
+    -p,--path <path>                    Folder/file path
+    -r,--report-option <reportOption>   Report type: 1/2/3
+
+Example:
+
+`java -jar target/mwo-pomidor-1.0-SNAPSHOT-jar-with-dependency.jar -p <path> -r 1 -e file_name`
+
+generates report 1 (from folder/file located in path) to file_name file.
+
+If u are lost use `-h` for help
+
+
+---------------
+---------------
 **Made with ♡ by 🍅**
