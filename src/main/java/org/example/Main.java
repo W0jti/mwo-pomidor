@@ -2,10 +2,12 @@ package org.example;
 
 import org.apache.commons.cli.*;
 import org.example.Data.ExcelReader;
+import org.example.Data.ExcelReaderFacade;
 import org.example.Data.FileSearcher;
 import org.example.export.IExporter;
 import org.example.export.PdfExport;
 import org.example.model.Task;
+import org.example.raport.ReportFacade;
 import org.example.report.*;
 
 import java.io.IOException;
@@ -118,6 +120,17 @@ public class Main {
                 }
             }
         }
+
+        String folderPath = "D:\\projects\\studia-podyplomowe\\pracownia-projektowa\\reporter-dane\\reporter-dane\\2012\\01\\Kowalski_Jan.xls";
+
+        ExcelReaderFacade excelReader = new ExcelReaderFacade();
+        List<String> filePaths = FileSearcher.searchXlsFiles(folderPath);
+        List<Task> tasks = excelReader.readTasksFromMultipleFiles(filePaths);
+
+        String filePath = "C:\\Users\\sebas\\Desktop\\raport3.xlsx";
+        ReportFacade reportGenerator = new ReportFacade(tasks, filePath);
+//        reportGenerator.report1("xls");
+        reportGenerator.report3("xls");
     }
 
     public static void usage(Options options) {
