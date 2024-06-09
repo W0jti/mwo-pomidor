@@ -8,6 +8,7 @@ import org.example.export.PdfExport;
 import org.example.filter.FilterQuery;
 import org.example.model.Task;
 import org.example.report.*;
+import org.example.utils.ExcelExport;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.SwingWrapper;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
 
@@ -44,10 +46,24 @@ public class Main {
             .desc("How to use")
             .build();
 
-    private final static Option ARG_EXPORT = Option.builder("e")
+    private final static Option ARG_EXPORT_TYPE = Option.builder("e")
             .argName("export")
-            .longOpt("export")
-            .desc("Export pdf")
+            .longOpt("Export type")
+            .desc("Export pdf or excel")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_PATH_EXPORT = Option.builder("pe")
+            .argName("pathExport")
+            .longOpt("Export path")
+            .desc("Export path")
+            .hasArg()
+            .build();
+
+    private final static Option ARG_EXPORT_FILENAME = Option.builder("efn")
+            .argName("exportFilename")
+            .longOpt("Export filename")
+            .desc("Export filename")
             .hasArg()
             .build();
 
@@ -56,6 +72,24 @@ public class Main {
             .longOpt("chart")
             .desc("Generate chart image")
             .build();
+
+
+    private static void writeDataToExcel(
+            IGenerateReport reportGenerator,
+            String filePathExport,
+            List<Task> tasks,
+            boolean isDetailed
+    ){
+        ExcelExport excelExport = new ExcelExport(filePathExport);
+
+        reportGenerator.writeXls(
+                excelExport,
+                tasks,
+                isDetailed
+        );
+
+        excelExport.saveToFile();
+    }
 
     private final static Option ARG_FROM = Option.builder("f")
             .argName("from")
@@ -84,7 +118,9 @@ public class Main {
         options.addOption(ARG_PATH);
         options.addOption(ARG_REPORT_TYPE);
         options.addOption(ARG_HELP);
-        options.addOption(ARG_EXPORT);
+        options.addOption(ARG_EXPORT_TYPE);
+        options.addOption(ARG_PATH_EXPORT);
+        options.addOption(ARG_EXPORT_FILENAME);
         options.addOption(ARG_CHART);
         options.addOption(ARG_REPORT_OPTION);
         options.addOption(ARG_FROM);
@@ -107,35 +143,66 @@ public class Main {
             String path = cmd.getOptionValue(ARG_PATH);
             String reportOption = cmd.getOptionValue(ARG_REPORT_OPTION);
             boolean detailed = cmd.hasOption(ARG_REPORT_TYPE);
+            boolean hasExportType = cmd.hasOption("e");
+            boolean hasPathExport = cmd.hasOption("pe");
+            boolean hasExportFilename = cmd.hasOption("efn");
 
             List<String> filePaths = FileSearcher.searchXlsFiles(path);
             List<Task> tasks = ExcelReader.readTasksFromMultipleFiles(filePaths, filterQuery);
 
-            IExporter exporter;
+            IExporter exporterPdf;
             IGenerateReport reportGenerator = ReportManager.getReportGenerator(reportOption);
-
+            String exportFilename = hasExportFilename
+                    ? cmd.getOptionValue("efn")
+                    : "report";
+            String filePathExport = hasPathExport
+                    ? cmd.getOptionValue("pe") + "\\" +exportFilename+".xlsx"
+                    : exportFilename+".xlsx";
 
             if(detailed){
                 HashMap<String, HashMap<String, BigDecimal>> data = reportGenerator.getDetailedReportData(tasks);
                 ReportPrinter.printDetailed(data);
-                exporter = new PdfExport(null, data);
+                exporterPdf = new PdfExport(null, data);
             } else {
                 HashMap<String, BigDecimal> data = reportGenerator.getReportData(tasks);
                 ReportPrinter.print(data);
-                exporter = new PdfExport(data, null);
+                exporterPdf = new PdfExport(data, null);
 
                 ExampleChart<CategoryChart> exampleChart = new Charts();
                 CategoryChart chart = exampleChart.getChart(data);
                 new SwingWrapper<CategoryChart>(chart).displayChart();
             }
 
-            if (cmd.hasOption(ARG_EXPORT)) {
-                String fileName =  cmd.getOptionValue(ARG_EXPORT);
+            if (hasExportType) {
+
+                String exportType =  cmd.getOptionValue("e"); // pdf or excel
+                System.out.println("========: " + exportType + " ++++: " + Objects.equals(exportType, "excel"));
                 if (detailed){
-                    exporter.exportDetailed(fileName);
-                }
-               else {
-                    exporter.export(fileName);
+                    if (Objects.equals(exportType, "pdf")){
+                        exporterPdf.exportDetailed(filePathExport);
+                    } else if (Objects.equals(exportType, "excel")){
+                        writeDataToExcel(
+                                reportGenerator,
+                                filePathExport,
+                                tasks,
+                                true
+                        );
+                    } else {
+                        System.out.println("nie ma takiego typu exportu");
+                    }
+                } else {
+                    if (Objects.equals(exportType, "pdf")){
+                        exporterPdf.export(filePathExport);
+                    } else if (Objects.equals(exportType, "excel")){
+                        writeDataToExcel(
+                                reportGenerator,
+                                filePathExport,
+                                tasks,
+                                false
+                        );
+                    } else {
+                        System.out.println("nie ma takiego typu exportu");
+                    }
                 }
             }
         }
