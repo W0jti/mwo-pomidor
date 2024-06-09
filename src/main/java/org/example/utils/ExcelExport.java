@@ -35,8 +35,6 @@ public class ExcelExport {
             cell.setCellValue(headerss[i]);
             sheet.setColumnWidth(i, 6000);
         }
-
-        // Wypełnienie danych osobno dla każdego raportu
     }
 
     public void addRow() {
@@ -55,12 +53,11 @@ public class ExcelExport {
     }
 
     public void saveToFile() {
-        // Zapis do pliku
         try {
             FileOutputStream fileOut = new FileOutputStream(fileName);
             workbook.write(fileOut);
             workbook.close();
-            System.out.println("Exportowano raport do pliku: " + fileName);
+            System.out.println("Wyexportowano raport do pliku: " + fileName);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Błąd exportu pliku: " + fileName);

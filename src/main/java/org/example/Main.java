@@ -99,12 +99,15 @@ public class Main {
 
             IExporter exporter;
             IGenerateReportDetailed reportGenerator;
+            String filePathExport;
+            String[] HEADERS;
+
             switch (reportOption) {
                 case "1":
                     reportGenerator = new Report1Generator();
 
-                    String filePathExport = "C:\\Users\\sebas\\Desktop\\report1.xlsx";
-                    String[] HEADERS = {"Nazwa projektu", "Liczba godzin"};
+                    filePathExport = "C:\\Users\\sebas\\Desktop\\report1.xlsx";
+                    HEADERS = new String[]{"Nazwa projektu", "Liczba godzin"};
 
                     writeDataToExcel(
                             reportGenerator,
@@ -117,6 +120,17 @@ public class Main {
 
                 case "2":
                     reportGenerator = new Report2Generator();
+
+                    filePathExport = "C:\\Users\\sebas\\Desktop\\report1.xlsx";
+                    HEADERS = new String[]{"Nazwa projektu", "Liczba godzin"};
+
+                    writeDataToExcel(
+                            reportGenerator,
+                            filePathExport,
+                            HEADERS,
+                            tasks
+                    );
+
                     break;
 
                 case "3":
