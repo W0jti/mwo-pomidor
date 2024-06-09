@@ -8,6 +8,7 @@ import org.example.export.PdfExport;
 import org.example.filter.FilterQuery;
 import org.example.model.Task;
 import org.example.report.*;
+import org.example.utils.ErrorMessages;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.SwingWrapper;
 
@@ -124,9 +125,12 @@ public class Main {
                 ReportPrinter.print(data);
                 exporter = new PdfExport(data, null);
 
-                ExampleChart<CategoryChart> exampleChart = new Charts();
-                CategoryChart chart = exampleChart.getChart(data);
-                new SwingWrapper<CategoryChart>(chart).displayChart();
+
+                if (cmd.hasOption(ARG_CHART)){
+                    BarChart<CategoryChart> exampleChart = new Charts();
+                    CategoryChart chart = exampleChart.getChart(data);
+                    new SwingWrapper<CategoryChart>(chart).displayChart();
+                }
             }
 
             if (cmd.hasOption(ARG_EXPORT)) {
@@ -139,6 +143,8 @@ public class Main {
                 }
             }
         }
+
+        ErrorMessages.getInstance().show();
     }
 
     public static void usage(Options options) {

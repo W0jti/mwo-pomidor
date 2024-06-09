@@ -3,6 +3,7 @@ package org.example.Data;
 import org.apache.poi.ss.usermodel.*;
 import org.example.filter.FilterQuery;
 import org.example.model.Task;
+import org.example.utils.ErrorMessages;
 import org.example.utils.StringExtensions;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class ExcelReader implements IExcelReader{
             Row currentRow = rowIterator.next();
             Iterator<Cell> cellIterator = currentRow.cellIterator();
 
-            //handle blank cells - for now it skips whole row
+
             List<CellType> cellTypes = new ArrayList<>();
             for (int i=0 ; i<3 ;i++){
                 Cell cell = currentRow.getCell(i);
@@ -64,6 +65,27 @@ public class ExcelReader implements IExcelReader{
             }
 
             if (cellTypes.contains(CellType.BLANK)){
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Row " + currentRow.getRowNum() + " contains blank cells");
+                continue;
+            }
+
+            if (currentRow.getCell(0).getCellType() != CellType.NUMERIC) {
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Date in row " + currentRow.getRowNum() + " is not valid date format");
+                continue;
+            }
+
+            if (currentRow.getCell(1).getCellType() != CellType.STRING) {
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Task name in  row " + currentRow.getRowNum() + " is not string");
+                continue;
+            }
+
+            if (currentRow.getCell(2).getCellType() != CellType.NUMERIC ) {
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Time in row " + currentRow.getRowNum() + " is not valid");
+                continue;
+            }
+
+            if (currentRow.getCell(2).getNumericCellValue() < 0 ) {
+                ErrorMessages.getInstance().addErrorMessage(file.getName() + " - Time in row " + currentRow.getRowNum() + " is negative value");
                 continue;
             }
 
