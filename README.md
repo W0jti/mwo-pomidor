@@ -55,7 +55,7 @@ To generate a report, type in terminal below command with relevant flags:
 
 You can use the following flags:
 
-**`[-c]` `[-d]` `[-e <export>]` `[-h]` `[-p <path>]` `[-r <reportOption>]` `[-f]` `[-t]` `[-emp]`**
+**`[-c]` `[-d]` `[-e <export>]` `[-ep <path>]` `[-efn <filename>]``[-h]` `[-p <path>]` `[-r <reportOption>]` `[-f <dd/mm/yyyy>]` `[-t] <dd/mm/yyyy>``[-emp <"surname name">]`**
 
 
     
@@ -101,11 +101,6 @@ You can use the following flags:
     Example: -source resources -r 1 -d -t 30/01/2010
     Example: -source resources -r 1 -d -t 30/01/2010 -f 01/01/2010
 ---
-    -e,--export <???>
-
-    TBD
-
----
     -emp, --employee <"surname name">
 
     This parameter filters files for specified employee.
@@ -117,6 +112,27 @@ You can use the following flags:
     Parameter without arguments which generates charts in the report. 
 
     Example: -source resources -r 2 -d -c
+---
+    -e,--export <filetype>
+
+    This parameter defines if report should be generated as .pdf or .xlsx file
+
+    Example: -source resources -r 3 -d -e pdf
+    Example: -source resources -r 3 -d -e excel
+---
+    -ep,--export-path <pathname>
+
+    Parameter which dictates in what location report should be generated.
+
+    Example: -source resources -r 2 -d -c -ep
+    Example: -source resources -r 2 -d -c -ep resources/generated_reports
+---
+    -efn,--export-file-name <filename>
+
+    Parameter which dictates what report name should be.
+
+    Example: -source resources -r 2 -d -c -efn
+    Example: -source resources -r 2 -d -c -efn TestReport
 ---
     -h,--help
 

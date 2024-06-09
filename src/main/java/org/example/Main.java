@@ -29,14 +29,14 @@ public class Main {
 
     private final static Option ARG_REPORT_OPTION = Option.builder("r")
             .argName("reportOption")
-            .longOpt("report-option")
+            .longOpt("reportoption")
             .desc("Report type: 1/2/3")
             .hasArg()
             .build();
 
     private final static Option ARG_REPORT_TYPE = Option.builder("d")
             .argName("reportType")
-            .longOpt("report-type")
+            .longOpt("reporttype")
             .desc("Report type: detailed")
             .build();
 
@@ -48,21 +48,21 @@ public class Main {
 
     private final static Option ARG_EXPORT_TYPE = Option.builder("e")
             .argName("export")
-            .longOpt("Export type")
+            .longOpt("exporttype")
             .desc("Export pdf or excel")
             .hasArg()
             .build();
 
     private final static Option ARG_PATH_EXPORT = Option.builder("ep")
             .argName("exportPath")
-            .longOpt("Export path")
+            .longOpt("exportpath")
             .desc("Export path")
             .hasArg()
             .build();
 
     private final static Option ARG_EXPORT_FILENAME = Option.builder("efn")
             .argName("exportFilename")
-            .longOpt("Export filename")
+            .longOpt("exportfilename")
             .desc("Export filename")
             .hasArg()
             .build();
@@ -75,14 +75,14 @@ public class Main {
 
     private final static Option ARG_FROM = Option.builder("f")
             .argName("from")
-            .longOpt("from")
+            .longOpt("datefrom")
             .desc("Date from")
             .hasArg()
             .build();
 
     private final static Option ARG_TO = Option.builder("t")
             .argName("to")
-            .longOpt("to")
+            .longOpt("dateto")
             .desc("Date to")
             .hasArg()
             .build();
